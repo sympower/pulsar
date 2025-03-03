@@ -2217,7 +2217,7 @@ public class ConsumerImpl<T> extends ConsumerBase<T> implements ConnectionHandle
                         String originMessageIdStr = message.getMessageId().toString();
                         String originTopicNameStr = getOriginTopicNameStr(message);
                         TypedMessageBuilder<byte[]> typedMessageBuilderNew =
-                                producerDLQ.newMessage(Schema.AUTO_PRODUCE_BYTES(message.getReaderSchema().get()))
+                                producerDLQ.newMessage(Schema.BYTES)
                                         .value(message.getData())
                                         .properties(getPropertiesMap(message, originMessageIdStr, originTopicNameStr));
                         copyMessageKeysIfNeeded(message, typedMessageBuilderNew);
@@ -2276,7 +2276,7 @@ public class ConsumerImpl<T> extends ConsumerBase<T> implements ConnectionHandle
                 if (p == null || p.isCompletedExceptionally()) {
                     p = createProducerWithBackOff(() -> {
                         CompletableFuture<Producer<byte[]>> newProducer =
-                                ((ProducerBuilderImpl<byte[]>) client.newProducer(Schema.AUTO_PRODUCE_BYTES(schema)))
+                                ((ProducerBuilderImpl<byte[]>) client.newProducer(Schema.BYTES))
                                         .initialSubscriptionName(this.deadLetterPolicy.getInitialSubscriptionName())
                                         .topic(this.deadLetterPolicy.getDeadLetterTopic())
                                         .producerName(
